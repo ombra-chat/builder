@@ -44,7 +44,13 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Merge images
-        run: docker manifest create ghcr.io/ombra-chat/builder:${{ github.ref_name }} --amend ghcr.io/ombra-chat/builder:${{ github.ref_name }}-arm64 --amend ghcr.io/ombra-chat/builder:${{ github.ref_name }}-amd64
+        run: |
+          docker manifest create ghcr.io/ombra-chat/builder:${{ github.ref_name }} ghcr.io/ombra-chat/builder:${{ github.ref_name }}-amd64 ghcr.io/ombra-chat/builder:${{ github.ref_name }}-arm64
+          digest=`docker image inspect ghcr.io/ombra-chat/builder:${{ github.ref_name }}-arm64 -f '{{ .Digest }}'`
+          docker manifest annotate --arch=arm64 ghcr.io/ombra-chat/builder:${{ github.ref_name }} "$digest"
+          docker tag ghcr.io/ombra-chat/builder:${{ github.ref_name }} ghcr.io/ombra-chat/builder:latest
 
-      - name: Push image
-        run: docker push ghcr.io/ombra-chat/builder:${{ github.ref_name }}
+      - name: Push images
+        run: |
+          docker push ghcr.io/ombra-chat/builder:${{ github.ref_name }}
+          docker push ghcr.io/ombra-chat/builder:latest
