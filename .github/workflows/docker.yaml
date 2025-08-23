@@ -6,12 +6,14 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
-          - platform: amd64
-          - platform: arm64
+          - os: ubuntu-22.04
+            platform: amd64
+          - os: ubuntu-22.04-arm
+            platform: arm64
 
     steps:
       - uses: actions/checkout@v4
@@ -46,8 +48,6 @@ jobs:
       - name: Merge images
         run: |
           docker manifest create ghcr.io/ombra-chat/builder:${{ github.ref_name }} ghcr.io/ombra-chat/builder:${{ github.ref_name }}-amd64 ghcr.io/ombra-chat/builder:${{ github.ref_name }}-arm64
-          digest=`docker image inspect ghcr.io/ombra-chat/builder:${{ github.ref_name }}-arm64 -f '{{ .Digest }}'`
-          docker manifest annotate --arch=arm64 ghcr.io/ombra-chat/builder:${{ github.ref_name }} "$digest"
           docker tag ghcr.io/ombra-chat/builder:${{ github.ref_name }} ghcr.io/ombra-chat/builder:latest
 
       - name: Push images
