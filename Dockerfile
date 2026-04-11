@@ -11,8 +11,8 @@ RUN git clone https://github.com/tdlib/td.git
 
 WORKDIR /td
 
-# 1.8.52
-RUN git checkout 4269f54e16b9cf564efc2db5bcd29743a2eec6ee
+# 1.8.63
+RUN git checkout f06b0bac65278b03d26414c096080e7bfecfef52
 
 RUN mkdir build
 
@@ -22,7 +22,7 @@ RUN cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local ..
 RUN cmake --build . --target install
 
 # Verify that tdjson can be found by pkg-config
-RUN PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1 pkg-config --libs --cflags tdjson 'tdjson >= 1.8.52'
+RUN PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1 pkg-config --libs --cflags tdjson 'tdjson >= 1.8.63'
 
 RUN cp /usr/local/lib/libtd* /usr/lib
 
@@ -32,9 +32,9 @@ WORKDIR /opt
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 # Install node
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
 ENV NVM_DIR=/root/.nvm
-RUN bash -c "source $NVM_DIR/nvm.sh && nvm install 22"
+RUN bash -c "source $NVM_DIR/nvm.sh && nvm install 24"
 
 WORKDIR /
 
