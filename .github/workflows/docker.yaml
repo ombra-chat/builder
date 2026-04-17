@@ -48,9 +48,9 @@ jobs:
       - name: Merge images
         run: |
           docker manifest create ghcr.io/ombra-chat/builder:${{ github.ref_name }} ghcr.io/ombra-chat/builder:${{ github.ref_name }}-amd64 ghcr.io/ombra-chat/builder:${{ github.ref_name }}-arm64
-          docker tag ghcr.io/ombra-chat/builder:${{ github.ref_name }} ghcr.io/ombra-chat/builder:latest
+          docker manifest create ghcr.io/ombra-chat/builder:latest ghcr.io/ombra-chat/builder:${{ github.ref_name }}-amd64 ghcr.io/ombra-chat/builder:${{ github.ref_name }}-arm64
 
       - name: Push images
         run: |
-          docker push ghcr.io/ombra-chat/builder:${{ github.ref_name }}
-          docker push ghcr.io/ombra-chat/builder:latest
+          docker manifest push ghcr.io/ombra-chat/builder:${{ github.ref_name }}
+          docker manifest push ghcr.io/ombra-chat/builder:latest
